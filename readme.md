@@ -6,11 +6,11 @@ Hardware:
  
  - Raspberry Pi Model B (assumed to be running the Docker daemon)
  - Pololu Micro Maestro serial servo controller
- - CHR-UM6
+ - CH Robotics UM-6 and Pololu GPS via Pololu USB-to-serial adapter
 
 # Setup
 
-Install Arch Linux on an SD card. Make sure to resize the partition to take up the available space.
+Install Arch Linux on an SD card. Make sure to resize the partition to take up the available space. (Use `fdisk` to rewrite the partition table and `resize2fs` to do the actual resizing. Google it.)
 
 Install Docker on the Rpi and start the Docker daemon such that it will listen on the local unix socket as well as over a TCP port:
 
