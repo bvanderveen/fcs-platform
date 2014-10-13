@@ -7,6 +7,21 @@ Hardware:
  - Raspberry Pi Model B (assumed to be running the Docker daemon)
  - Pololu Micro Maestro serial servo controller
  - CH Robotics UM-6 and Pololu GPS via Pololu USB-to-serial adapter
+ 
+# TODO
+
+ - Connect to and read from UM-6
+ - Export C API for driving servos
+ - Export C API for reading UM-6
+
+# DONE
+
+ - Get Rpi to wiggle a servo using Maestro example bash script
+ - Get Docker on Rpi
+ - Build minimal development container with compiler
+ - Ship source code from laptop to Rpi
+ - Compile and run source code within development container
+ - Get Rpi to wiggle a servo using Maestro example C code
 
 # Setup
 
