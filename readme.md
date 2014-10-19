@@ -17,33 +17,44 @@ Hardware:
 # DONE
 
  - Get Rpi to wiggle a servo using Maestro example bash script
- - Get Docker on Rpi
- - Build minimal development container with compiler
+ - <strike>Get Docker on Rpi</strike> *dumb idea*
+ - <strike>Build minimal development container with compiler</strike> *needed a cross-compiler instead*
  - Ship source code from laptop to Rpi
- - Compile and run source code within development container
+ - <strike>Compile and run source code within development container</strike> *going to run it natively*
+ - Set up cross compiler
+ - Cross-compile, deploy binary, and run on Rpi in one command
  - Get Rpi to wiggle a servo using Maestro example C code
 
 # Setup
 
+## Put Linux on Rpi
+
 Install Arch Linux on an SD card. Make sure to resize the partition to take up the available space. (Use `fdisk` to rewrite the partition table and `resize2fs` to do the actual resizing. Google it.)
 
-Install Docker on the Rpi and start the Docker daemon such that it will listen on the local unix socket as well as over a TCP port:
+## Put Docker on laptop
 
-    $ pacman -Syu
-    $ pacman -S docker
-    $ docker -d -H unix:///var/run/docker.sock -H 0.0.0.0:9000
+Make sure you've got Docker on your laptop and your `docker` command is set up to talk to a Docker daemon.
 
-On your laptop, set `DOCKER_HOST` to the Rpi's IP address.
 
-    $ export DOCKER_HOST=tcp://192.168.2.200:9000
-    
-Build the Docker image in which the platform support will run:
+## Build cross-compiler
 
-    $ ./build.sh 
+We're going to build a Docker container with a cross-compiler in it. It will compile our source code on our laptop and then deploy and run the resulting binary on the Rpi. 
 
-Assuming the setup went well, you should be able to edit the contents of `platform/src` and then deploy and run the program with:
+In order to achieve the deploy and run, the container will need to be able to log into your Rpi. I'm on OS X and using `boot2docker`. Sharing data on my local disk into the container using volumes is not possible on OS X right now. I've decided the least insane thing to do is to put my SSH keys into the container during the bootstrapping process. *trollface*
 
-    $ ./run.sh 192.168.2.200
+**DO NOT PUSH THE RESULTING DOCKER IMAGE TO A PUBLIC REPOSITORY! IT HAS YOUR PRIVATE KEY IN IT.**
+
+    $ ./bootstrap root@192.168.2.200
+
+Now you can compile and run the source:
+
+    $ ./build.sh
+
+Congratulations, you're hacking!
+
+For some reason the program doesn’t always die on the Pi when you expect it to. You might need to:
+
+    $ ssh root@192.168.2.200 killall fcs-platform
 
 # Notes about connecting to the Pi
 

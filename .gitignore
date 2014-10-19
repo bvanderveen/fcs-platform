@@ -1,2 +1,2 @@
-id_rsa*
-platform/src/host
+/tools/id_rsa*
+/tools/host
