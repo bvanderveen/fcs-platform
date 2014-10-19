@@ -3,7 +3,6 @@
 #include <time.h>
 #include <stdlib.h>
 #include <fcntl.h>
-
 #include "maestro.h"
 
 // Gets the position of a Maestro channel.
