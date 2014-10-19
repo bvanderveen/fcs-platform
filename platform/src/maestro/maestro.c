@@ -1,9 +1,10 @@
-#include <fcntl.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include <stdio.h>  
 #include <math.h>
 #include <time.h>
+#include <stdlib.h>
+#include <fcntl.h>
+
+#include "maestro.h"
 
 // Gets the position of a Maestro channel.
 // See the "Serial Servo Commands" section of the user's guide.
@@ -40,7 +41,21 @@ int maestroSetTarget(int fd, unsigned char channel, unsigned short target)
   return 0;
 }
 
-int main()
+void setServoPosition(int fd, unsigned char channel, float position) 
+{
+    float scaled = (position * 4000) + 4000;
+    int target = (int)roundf(scaled);
+    printf("Setting ch%d to %f (%d us)\n", channel, position, target/4);
+    maestroSetTarget(fd, 0, target);
+}
+
+float randomFloat() {
+    float r = (float)rand();
+    float normalized = r / (float)RAND_MAX;
+    return normalized;
+}
+
+void talkToServos()
 {
   printf("Let's talk to servos!\n");
 
@@ -49,32 +64,20 @@ int main()
   int fd = open(device, O_RDWR | O_NOCTTY);
   if (fd == -1)
   {
-    printf("Oh balls.\n");
     perror(device);
-    return 1;
+    return;// 1;
   }
 
-  printf("yea balls.\n");
-   
-  //int position = maestroGetPosition(fd, 0);
-  //printf("Current position is %d.\n", position); 
   srand(time(0));
 
   int i = 0;
   while (i < 4) {
     sleep(1);
-    float r = (float)rand();
-    float normalized = r / (float)RAND_MAX;
-    printf("rand was %f\n", r);
-    float scaled = (normalized * 4000) + 4000;
-
-    int target = (int)roundf(scaled);
-
-    printf("Setting target to %d (%d us).\n", target, target/4);
-    maestroSetTarget(fd, 0, target);
+    float position = randomFloat();
+    setServoPosition(fd, 0, position);
     i++;
   }
    
   close(fd);
-  return 0;
+  //return 0;
 }

@@ -1,7 +1,8 @@
-FROM resin/rpi-raspbian
-
-RUN apt-get update
-RUN apt-get install -y git vim curl wget build-essential cmake
-RUN mkdir /home/src
-
-WORKDIR /home/src
+FROM rpi-crosscompiler
+RUN mkdir /opt/sources
+RUN apt-get install -y build-essential
+ADD src/ /opt/sources
+RUN ls -al /opt/sources
+RUN mkdir /root/.ssh; cp /opt/sources/id_rsa /root/.ssh/id_rsa
+WORKDIR /opt/sources
+CMD ./build-platform.sh
