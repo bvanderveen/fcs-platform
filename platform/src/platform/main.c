@@ -5,11 +5,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <assert.h>
+#include <string.h>
 #include "maestro.h"
 #include "../chr-um6/wire_format/um6_parser.h"
 #include "../chr-um6/interface/chr_um6.h"
 #include "../chr-um6/regs/um6_regs.h"
 #include "../chr-um6/regs/um6_convert.h"
+#include "../chr-um6/sys/posix_serial.h"
 
 void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
 {
@@ -65,6 +68,10 @@ void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
          printf("UM6_GET_FW_VERSION\n");
          out->fw_version.data = data32_1;
          out->fw_version.valid = 1;
+         char result[5];
+         memcpy(result, &out->fw_version.data, 4);
+         result[4] = '\0';
+         printf("the firmware version was %s", result);
          break;
       
       case UM6_GYRO_RAW1:
@@ -147,35 +154,68 @@ void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
    }
 }
 
+void writeComSettings(serialport_t *port) {
+
+  um6_composer_t composer;
+  um6_composer_init(&composer);
+
+  uint32_t data = 0;
+  //UM6_COMM_SET_VEL(data);
+  //UM6_COMM_SET_REL(data);
+  //UM6_COMM_SET_POS(data);
+  //UM6_COMM_CLEAR_EU(data);
+  UM6_COMM_SET_QT(data);
+  //UM6_COMM_SET_MP(data);
+  //UM6_COMM_SET_AP(data);
+  //UM6_COMM_SET_GP(data);
+  UM6_COMM_SET_MR(data);
+  UM6_COMM_SET_AR(data);
+  UM6_COMM_SET_GR(data);
+
+
+  printf("about to compose.\n");
+  int is_batch = 0;
+
+  uint32_t u_val = htobe32(data);
+  um6_composer_run(&composer, (uint8_t *)&u_val, UM6_DATA_ITEM_SIZE, is_batch, UM6_COMM);
+
+  printf("sleeping 1\n");
+  sleep(1);
+
+  printf("about to write.\n");
+  uint8_t *to_write = composer.data;
+  int written = serial_write(port, (char *)to_write, composer.size);
+
+  assert(written == composer.size);
+
+}
+
 
 int main() {
+  //talkToServos();
+  serialport_t port;
+  serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
 
-  talkToServos();
+  printf("Opened the port.\n");
 
-  uint8_t accel_xy = 0x58;
-  uint8_t accel_z = 0x59;
+  //writeComSettings(&port);
 
-
-  // Open the Maestro's virtual COM port.
-  const char * device = "/dev/ttyUSB0";  // Linux
-  int fd = open(device, O_RDWR | O_NOCTTY);
-  if (fd == -1)
-  {
-    perror(device);
-    return 1;
-  }
-
-  printf("Opened the file");
+  printf("sleeping 1\n");
+  sleep(1);
 
   int count = 0;
 
   while (++count < 10) {
 
-    size_t howBig = 1024 * 2;
-    unsigned char rx_data[howBig];
 
-    int message_length = read(fd, &rx_data, howBig);
 
+    printf("reading\n");
+
+    sleep(1);
+    size_t howBig = 2048;
+    char rx_data[howBig];
+
+    int message_length = serial_read_buffer(rx_data, howBig, &port);
     printf("read %d bytes\n", message_length);
 
     um6_parser_t parser;
@@ -186,25 +226,30 @@ int main() {
     for (; i < message_length; i++) {
       int result = um6_parser_run(&parser, rx_data[i]);
 
+      //printf("parsed byte %x\n", rx_data[i]);
+
       switch (result) {
         case 0:
-          //printf("parsed byte");
           break;
         case 1:
           handle_data(&um6_data, parser.ca, parser.data);
           break;
         case -1:
+          um6_parser_init(&parser);
           printf("parse error\n");
+          break;
         case -2:
+          um6_parser_init(&parser);
           printf("bad checksum\n");
+          break;
       }
     }
 
 
-    sleep(1);
+    
   }
 
-  close(fd);
+  serial_close(&port);
   return 0;
 
 }
