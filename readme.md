@@ -87,3 +87,8 @@ I also modified `/System/Library/LaunchDaemons/bootps.plist` to add the `-dv` fl
     </array>
     ....
 
+# Notes about talking to the GPS
+
+TIL that this is useful for `cat`-ing the raw output from the GPS:
+
+    $ stty -F /dev/ttyUSB0 57600 raw
