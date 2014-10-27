@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <string.h>
 #include "maestro.h"
+#include "gps.h"
 #include "../chr-um6/wire_format/um6_parser.h"
 #include "../chr-um6/interface/chr_um6.h"
 #include "../chr-um6/regs/um6_regs.h"
@@ -190,66 +191,60 @@ void writeComSettings(serialport_t *port) {
 
 }
 
-
 int main() {
   //talkToServos();
-  serialport_t port;
-  serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
+  // serialport_t port;
+  // serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
 
-  printf("Opened the port.\n");
+  // printf("Opened the port.\n");
 
-  //writeComSettings(&port);
+  // //writeComSettings(&port);
 
-  printf("sleeping 1\n");
-  sleep(1);
+  // printf("sleeping 1\n");
+  // sleep(1);
 
-  int count = 0;
+  // int count = 0;
 
-  while (++count < 10) {
+  // while (++count < 10) {
 
+  //   printf("reading\n");
 
+  //   sleep(1);
+  //   size_t howBig = 2048;
+  //   char rx_data[howBig];
 
-    printf("reading\n");
+  //   int message_length = serial_read_buffer(rx_data, howBig, &port);
+  //   printf("read %d bytes\n", message_length);
 
-    sleep(1);
-    size_t howBig = 2048;
-    char rx_data[howBig];
+  //   um6_parser_t parser;
+  //   um6_parser_init(&parser);
 
-    int message_length = serial_read_buffer(rx_data, howBig, &port);
-    printf("read %d bytes\n", message_length);
+  //   um6_data_t um6_data;
+  //   int i = 0;
+  //   for (; i < message_length; i++) {
+  //     int result = um6_parser_run(&parser, rx_data[i]);
 
-    um6_parser_t parser;
-    um6_parser_init(&parser);
+  //     switch (result) {
+  //       case 0:
+  //         break;
+  //       case 1:
+  //         handle_data(&um6_data, parser.ca, parser.data);
+  //         break;
+  //       case -1:
+  //         um6_parser_init(&parser);
+  //         printf("parse error\n");
+  //         break;
+  //       case -2:
+  //         um6_parser_init(&parser);
+  //         printf("bad checksum\n");
+  //         break;
+  //     }
+  //   }
+  // }
 
-    um6_data_t um6_data;
-    int i = 0;
-    for (; i < message_length; i++) {
-      int result = um6_parser_run(&parser, rx_data[i]);
+  // serial_close(&port);
 
-      //printf("parsed byte %x\n", rx_data[i]);
-
-      switch (result) {
-        case 0:
-          break;
-        case 1:
-          handle_data(&um6_data, parser.ca, parser.data);
-          break;
-        case -1:
-          um6_parser_init(&parser);
-          printf("parse error\n");
-          break;
-        case -2:
-          um6_parser_init(&parser);
-          printf("bad checksum\n");
-          break;
-      }
-    }
-
-
-    
-  }
-
-  serial_close(&port);
+  talkToGPS();
   return 0;
 
 }
