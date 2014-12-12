@@ -44,6 +44,9 @@ In order to achieve the deploy and run, the container will need to be able to lo
 
 **DO NOT PUSH THE RESULTING DOCKER IMAGE TO A PUBLIC REPOSITORY! IT HAS YOUR PRIVATE KEY IN IT.**
 
+First ensure `boot2docker` is up and running
+
+    $ boot2docker up 
     $ ./bootstrap root@192.168.2.200
 
 Now you can compile and run the source:
