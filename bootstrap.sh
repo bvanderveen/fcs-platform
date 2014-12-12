@@ -4,6 +4,7 @@
 # the build+deploy container so we can deploy from there.
 
 set -e
+set -x
 
 host=$1
 

@@ -1,3 +1,5 @@
+#!/bin/bash
+set -e
 
 host="$(cat /opt/rpi/host)"
 
