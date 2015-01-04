@@ -47,7 +47,7 @@ In order to achieve the deploy and run, the container will need to be able to lo
 First ensure `boot2docker` is up and running
 
     $ boot2docker up 
-    $ ./bootstrap root@192.168.2.200
+    $ ./bootstrap.sh root@192.168.2.200
 
 Now you can compile and run the source:
 
