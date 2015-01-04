@@ -7,13 +7,16 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
+#include <stdint.h>
 #include "maestro.h"
 #include "gps.h"
-#include "../chr-um6/wire_format/um6_parser.h"
+#include "platform.h"
+#include "chr_sensor.h"
 #include "../chr-um6/interface/chr_um6.h"
 #include "../chr-um6/regs/um6_regs.h"
+#include "../chr-um6/regs/gp9_regs.h"
 #include "../chr-um6/regs/um6_convert.h"
-#include "../chr-um6/sys/posix_serial.h"
+
 
 void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
 {
@@ -155,6 +158,85 @@ void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
    }
 }
 
+void handle_data_gp9(um6_data_t *out, uint8_t ca, uint8_t *data)
+{
+   uint32_t data32_1 = be32toh(*(uint32_t *)data);
+   uint32_t data32_2 = be32toh(*(uint32_t *)(data + UM6_DATA_ITEM_SIZE));
+   switch (ca)
+   {
+      case GP9_DREG_VELOCITY_UP:
+        printf("GP9_DREG_VELOCITY_UP\n");
+        break;
+
+      case GP9_DREG_QUAT_AB:
+        printf("GP9_DREG_QUAT_AB\n");
+        break;
+
+      case GP9_DREG_VELOCITY_N:
+        printf("GP9_DREG_VELOCITY_N\n");
+        break;
+
+      case GP9_DREG_GYRO_PROC_X:
+        printf("GP9_DREG_GYRO_PROC_X\n");
+        break;
+
+      case GP9_DREG_MAG_PROC_X:
+        printf("GP9_DREG_MAG_PROC_X\n");
+        break;
+
+      case GP9_DREG_GPS_LATITUDE:
+        printf("GP9_DREG_GPS_LATITUDE\n");
+        break;
+
+      case GP9_DREG_GPS_LONGITUDE:
+        printf("GP9_DREG_GPS_LONGITUDE\n");
+        break;
+
+      case GP9_DREG_POSITION_N:
+        printf("GP9_DREG_POSITION_N\n");
+        break;
+
+      case GP9_DREG_EULER_PHI_THETA:
+        printf("GP9_DREG_EULER_PHI_THETA\n");
+        break;
+
+      case GP9_DREG_GYRO_RAW1:
+        printf("GP9_DREG_GYRO_RAW1\n");
+        break;
+
+      case GP9_DREG_HEALTH:
+        printf("DREG_HEALTH\n");
+        break;
+
+      case GP9_DREG_GYRO_BIAS_Y:
+        printf("GP9_DREG_GYRO_BIAS_Y\n");
+        break;
+
+      case GP9_DREG_BIAS_Y_VARIANCE:
+        printf("GP9_DREG_BIAS_Y_VARIANCE\n");
+        break;
+
+
+
+
+      // case GP9_DREG_GYRO_BIAS_X:
+      //   printf("GP9_DREG_GYRO_BIAS_X\n");
+      //   break;
+
+      // case GP9_DREG_GYRO_PROC_X:
+      //   printf("GP9_DREG_GYRO_PROC_X\n");
+      //   break;
+
+      // case GP9_DREG_MAG_PROC_X:
+      //   printf("GP9_DREG_MAG_PROC_X\n");
+      //   break;
+
+
+     default:
+         printf("unhandled command: %X\n", ca);
+   }
+}
+
 void writeComSettings(serialport_t *port) {
 
   um6_composer_t composer;
@@ -191,60 +273,78 @@ void writeComSettings(serialport_t *port) {
 
 }
 
+void talkToIMU() {
+  serialport_t port;
+  serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
+
+  printf("Opened the port.\n");
+
+  //writeComSettings(&port);
+
+  printf("sleeping 1\n");
+  sleep(1);
+
+  int count = 0;
+
+  while (++count < 10) {
+
+    printf("reading\n");
+
+    sleep(1);
+    size_t howBig = 2048;
+    char rx_data[howBig];
+
+    int message_length = serial_read_buffer(rx_data, howBig, &port);
+    printf("read %d bytes\n", message_length);
+
+    um6_parser_t parser;
+    um6_parser_init(&parser);
+
+    um6_data_t um6_data;
+    int i = 0;
+    for (; i < message_length; i++) {
+      int result = um6_parser_run(&parser, rx_data[i]);
+
+      switch (result) {
+        case 0:
+          break;
+        case 1:
+          handle_data_gp9(&um6_data, parser.ca, parser.data);
+          break;
+        case -1:
+          um6_parser_init(&parser);
+          printf("parse error\n");
+          break;
+        case -2:
+          um6_parser_init(&parser);
+          printf("bad checksum\n");
+          break;
+      }
+    }
+  }
+
+  serial_close(&port);
+}
+
 int main() {
-  //talkToServos();
-  // serialport_t port;
-  // serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
+  const char *sensor_device = "/dev/ttyUSB0";
+  const char *servo_device = "/dev/ttyACM0";
 
-  // printf("Opened the port.\n");
+  platform *platform = platform_alloc(sensor_device, servo_device);
 
-  // //writeComSettings(&port);
+  float state = 0;
 
-  // printf("sleeping 1\n");
-  // sleep(1);
+  while (1) {
+    platform_set_output_value(platform, 0, state);
+    platform_write_output_values(platform);
+    platform_read_input_values(platform);
+    float z_accell = platform_get_input_value_float(platform, GP9_DREG_ACCEL_PROC_Z);
+    z_accell /= 10; //roughly normalize gravity.
+    state = z_accell;
+  }
 
-  // int count = 0;
+  platform_dealloc(platform);
 
-  // while (++count < 10) {
-
-  //   printf("reading\n");
-
-  //   sleep(1);
-  //   size_t howBig = 2048;
-  //   char rx_data[howBig];
-
-  //   int message_length = serial_read_buffer(rx_data, howBig, &port);
-  //   printf("read %d bytes\n", message_length);
-
-  //   um6_parser_t parser;
-  //   um6_parser_init(&parser);
-
-  //   um6_data_t um6_data;
-  //   int i = 0;
-  //   for (; i < message_length; i++) {
-  //     int result = um6_parser_run(&parser, rx_data[i]);
-
-  //     switch (result) {
-  //       case 0:
-  //         break;
-  //       case 1:
-  //         handle_data(&um6_data, parser.ca, parser.data);
-  //         break;
-  //       case -1:
-  //         um6_parser_init(&parser);
-  //         printf("parse error\n");
-  //         break;
-  //       case -2:
-  //         um6_parser_init(&parser);
-  //         printf("bad checksum\n");
-  //         break;
-  //     }
-  //   }
-  // }
-
-  // serial_close(&port);
-
-  talkToGPS();
   return 0;
 
 }
