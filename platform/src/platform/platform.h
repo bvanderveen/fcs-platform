@@ -14,7 +14,7 @@ struct platform {
 };
 typedef struct platform platform;
 
-platform *platform_alloc(const char *sensor_device, const char *servo_device);
+platform *platform_alloc(chr_sensor *chr_sensor, servo_controller *servo_controller);
 void platform_dealloc(platform *platform);
 
 void platform_set_output_value(platform *platform, uint8_t channel, float value);
