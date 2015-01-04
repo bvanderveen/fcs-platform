@@ -13,11 +13,12 @@ if [[ -z "$host" ]]; then
 	exit -1
 fi
 
+
+docker build -t rpi-cross-compiler tools
+
 scp ~/.ssh/id_rsa.pub $host:/root/.ssh/authorized_keys
 
 echo $host > ./tools/host
 
 cp ~/.ssh/id_rsa ./tools
 cp ~/.ssh/id_rsa.pub ./tools
-
-docker build -t rpi-cross-compiler tools
