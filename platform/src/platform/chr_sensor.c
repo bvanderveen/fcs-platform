@@ -23,7 +23,6 @@ void chr_sensor_read(chr_sensor *chr_sensor, chr_sensor_data_handler handler, vo
     char rx_data[howBig];
 
     int message_length = serial_read_buffer(rx_data, howBig, chr_sensor->port);
-    printf("read %d bytes\n", message_length);
 
     um6_parser_t *parser = chr_sensor->parser;
 
@@ -35,7 +34,15 @@ void chr_sensor_read(chr_sensor *chr_sensor, chr_sensor_data_handler handler, vo
             case 0:
                 break;
             case 1:
-                handler(parser->ca, (uint32_t)parser->data, context);
+                ;//printf("[chr_sensor] parsed 0x%x (%d) = %d (data_len = %d)\n", parser->ca, parser->ca, (uint32_t)parser->data, parser->data_len);
+                uint8_t bytes_parsed = parser->data_len;
+
+                int register_count = bytes_parsed / 4;
+                int current_register = parser->ca;
+                int i;
+                for (i = 0; i < register_count; i++) {
+                    handler(current_register + i, (uint32_t *)&parser->data[4 * i], context);
+                }
                 break;
             case -1:
                 um6_parser_init(parser);
@@ -49,19 +56,16 @@ void chr_sensor_read(chr_sensor *chr_sensor, chr_sensor_data_handler handler, vo
     }
 }
 
-void chr_sensor_write(chr_sensor *chr_sensor, uint8_t channel, uint32_t data) {
+int chr_sensor_write(chr_sensor *chr_sensor, uint8_t channel, uint32_t *data, uint8_t data_length) {
     um6_composer_t *composer = chr_sensor->composer;
 
     printf("about to compose.\n");
-    int is_batch = 0;
+    int is_batch = data_length > 1;
 
-    uint32_t wire_data = htobe32(data);
-    um6_composer_run(composer, (uint8_t *)&wire_data, UM6_DATA_ITEM_SIZE, is_batch, channel);
+    um6_composer_run(composer, (uint8_t *)&data, data_length * 4, is_batch, channel);
 
     uint8_t *to_write = composer->data;
     int written = serial_write(chr_sensor->port, (char *)to_write, composer->size);
 
-    if (!(written == composer->size)) {
-        printf("sensor write may have failed\n");
-    }
+    return written == composer->size ? 0 : -1;
 }

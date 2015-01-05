@@ -14,12 +14,14 @@ struct chr_sensor {
 };
 typedef struct chr_sensor chr_sensor;
 
-typedef void(*chr_sensor_data_handler)(uint8_t channel, uint32_t data, void *);
+typedef void(*chr_sensor_data_handler)(uint8_t channel, uint32_t *data, void *);
 
 chr_sensor *chr_sensor_alloc(const char *device);
 void chr_sensor_dealloc(chr_sensor *chr_sensor);
 
 void chr_sensor_read(chr_sensor *chr_sensor, chr_sensor_data_handler handler, void *context);
-void chr_sensor_write(chr_sensor *chr_sensor, uint8_t channel, uint32_t data);
+
+// data length is the number of 32bit integers
+int chr_sensor_write(chr_sensor *chr_sensor, uint8_t channel, uint32_t *data, uint8_t data_length);
 
 #endif

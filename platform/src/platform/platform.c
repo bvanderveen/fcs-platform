@@ -1,5 +1,6 @@
 #include "platform.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include "../chr-um6/regs/um6_convert.h"
 
 platform *platform_alloc(chr_sensor *chr_sensor, servo_controller *servo_controller) {
@@ -30,9 +31,10 @@ float platform_get_input_value_float(platform *platform, uint8_t channel) {
     return int32_to_float(int_value);
 }
 
-void platform_chr_sensor_data_handler(uint8_t channel, uint32_t data, void *context) {
+void platform_chr_sensor_data_handler(uint8_t channel, uint32_t *data, void *context) {
+    printf("[platform] channel 0x%x (%d) = %d (%f)\n", channel, channel, *data, int32_to_float(*data));
     platform *p = (platform *)context;
-    p->input_values[channel] = data;
+    p->input_values[channel] = *data;
 }
 
 void platform_read_input_values(platform *platform) {
@@ -43,6 +45,7 @@ void platform_write_output_values(platform *platform) {
     int i = 0;
 
     for (; i < platform->output_values_count; i++) {
-        servo_controller_set_position(platform->servo_controller, i, platform->output_values[i]);
+        float value = platform->output_values[i];
+        servo_controller_set_position(platform->servo_controller, i, value);
     }
 }
