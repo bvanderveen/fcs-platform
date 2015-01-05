@@ -43,13 +43,17 @@ Make sure you've got Docker on your laptop and your `docker` command is set up t
 
     $ boot2docker up
 
-## Use a cross-compiler
+## Use the cross-compiler
 
-We're going to build a Docker container with a compiler toolchain that targets the Rpi. This command builds the docker container and runs the compiler.
+The core build script builds a Docker container with a compiler toolchain that targets the Rpi and then invokes compiler.
 
     $ ./build.sh
 
-Then, we can deploy and run the resulting binary on the Rpi (make sure your public key is on the Rpi so you don't have to type your password).
+The first time you run this it will take a while to build the docker image. Successive runs will be faster. 
+
+## Run the program
+
+We `scp` the resulting binary onto the Rpi (make sure your public key is on the Rpi so you don't have to type your password) and then run it.
 
     ./deploy.sh root@192.168.2.200
 
