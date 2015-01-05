@@ -39,9 +39,7 @@ Install Arch Linux on an SD card. Make sure to resize the partition to take up t
 
 ## Put Docker on your laptop
 
-Make sure you've got Docker on your laptop and your `docker` command is set up to talk to a Docker daemon.
-
-Ensure `boot2docker` is up and running;
+Make sure you've got Docker on your laptop and your `docker` command is set up to talk to a Docker daemon. On OS X, I use `boot2docker`. Ensure `boot2docker` is up and running;
 
     $ boot2docker up
 
@@ -51,7 +49,7 @@ We're going to build a Docker container with a cross-compiler in it. It will bui
 
     $ ./build.sh
 
-Then, deploy and run the resulting binary on the Rpi (make .
+Then, deploy and run the resulting binary on the Rpi (make sure your public key is on the Rpi so you don't have to type your password).
 
     ./deploy.sh root@192.168.2.200
 
