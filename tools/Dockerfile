@@ -7,7 +7,7 @@
 FROM ubuntu:14.04
 
 RUN locale-gen en_US.UTF-8; update-locale LANG=en_US.UTF-8
-RUN apt-get update && apt-get install -y git cmake make build-essential
+RUN apt-get update && apt-get install -y git cmake make build-essential python
 
 # raspberry pi compiler tools
 RUN mkdir -p /opt/rpi; cd /opt/rpi; git clone https://github.com/raspberrypi/tools.git
