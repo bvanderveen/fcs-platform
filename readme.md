@@ -4,26 +4,32 @@ This is the platform support for my Raspberry Pi-based flight controller.
 
 Hardware:
  
- - Raspberry Pi Model B (assumed to be running the Docker daemon)
+ - Raspberry Pi Model B 
  - Pololu Micro Maestro serial servo controller
- - CH Robotics UM-6 and Pololu GPS via Pololu USB-to-serial adapter
+ - CH Robotics <strike>UM-6 and Pololu GPS</strike> GP-9 via Pololu USB-to-serial adapter
  
 # TODO
 
- - Connect to and read from UM-6
- - Export C API for driving servos
- - Export C API for reading UM-6
+ - Get CMake to export a statically linkable library
+ - Get sending commands to the IMU to work properly
+ - Add Rpi tools repository as a submodule rather than cloning it into toolchain Docker image
 
 # DONE
 
+ - Connect to and read from IMU
+ - Create C API for driving servos
+ - Create C API for reading IMU
  - Get Rpi to wiggle a servo using Maestro example bash script
- - <strike>Get Docker on Rpi</strike> *dumb idea*
- - <strike>Build minimal development container with compiler</strike> *needed a cross-compiler instead*
  - Ship source code from laptop to Rpi
- - <strike>Compile and run source code within development container</strike> *going to run it natively*
  - Set up cross compiler
  - Cross-compile, deploy binary, and run on Rpi in one command
  - Get Rpi to wiggle a servo using Maestro example C code
+ 
+# MISTAKES
+
+ - <strike>Get Docker on Rpi</strike> *dumb idea*
+ - <strike>Build minimal development container with compiler</strike> *needed a cross-compiler instead*
+ - <strike>Compile and run source code within development container</strike> *run a binary on the Rpi natively*
 
 # Setup
 
