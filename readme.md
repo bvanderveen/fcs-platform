@@ -37,23 +37,23 @@ Hardware:
 
 Install Arch Linux on an SD card. Make sure to resize the partition to take up the available space. (Use `fdisk` to rewrite the partition table and `resize2fs` to do the actual resizing. Google it.)
 
-## Put Docker on laptop
+## Put Docker on your laptop
 
 Make sure you've got Docker on your laptop and your `docker` command is set up to talk to a Docker daemon.
 
+Ensure `boot2docker` is up and running;
 
-## Build cross-compiler
+    $ boot2docker up
 
-We're going to build a Docker container with a cross-compiler in it. It will compile our source code on our laptop and then deploy and run the resulting binary on the Rpi.
+## Use a cross-compiler
 
-First ensure `boot2docker` is up and running
+We're going to build a Docker container with a cross-compiler in it. It will build a Docker container for our compiler toolchain and then compile our source code in the resulting container. 
 
-    $ boot2docker up 
-    $ ./bootstrap.sh root@192.168.2.200
+    $ ./build.sh
 
-Now you can compile and run the source:
+Then, deploy and run the resulting binary on the Rpi (make .
 
-    $ ./build.sh && ./deploy.sh
+    ./deploy.sh root@192.168.2.200
 
 Congratulations, you're hacking!
 
