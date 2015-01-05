@@ -44,11 +44,7 @@ Make sure you've got Docker on your laptop and your `docker` command is set up t
 
 ## Build cross-compiler
 
-We're going to build a Docker container with a cross-compiler in it. It will compile our source code on our laptop and then deploy and run the resulting binary on the Rpi. 
-
-In order to achieve the deploy and run, the container will need to be able to log into your Rpi. I'm on OS X and using `boot2docker`. Sharing data on my local disk into the container using volumes is not possible on OS X right now. I've decided the least insane thing to do is to put my SSH keys into the container during the bootstrapping process. *trollface*
-
-**DO NOT PUSH THE RESULTING DOCKER IMAGE TO A PUBLIC REPOSITORY! IT HAS YOUR PRIVATE KEY IN IT.**
+We're going to build a Docker container with a cross-compiler in it. It will compile our source code on our laptop and then deploy and run the resulting binary on the Rpi.
 
 First ensure `boot2docker` is up and running
 
@@ -57,7 +53,7 @@ First ensure `boot2docker` is up and running
 
 Now you can compile and run the source:
 
-    $ ./build.sh
+    $ ./build.sh && ./deploy.sh
 
 Congratulations, you're hacking!
 
