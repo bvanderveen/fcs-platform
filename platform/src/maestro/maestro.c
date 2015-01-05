@@ -8,24 +8,24 @@
 #include "maestro.h"
 
 servo_controller *servo_controller_alloc(const char *device) {
-  servo_controller *controller = calloc(1, sizeof(servo_controller));
+    servo_controller *controller = calloc(1, sizeof(servo_controller));
 
-  controller->fd = open(device, O_RDWR | O_NOCTTY);
-  
-  if (controller->fd == -1)
-  {
-    perror(device);
-    servo_controller_dealloc(controller);
-    return NULL;
-  }
+    controller->fd = open(device, O_RDWR | O_NOCTTY);
 
-  return controller;
+    if (controller->fd == -1)
+    {
+        perror(device);
+        servo_controller_dealloc(controller);
+        return NULL;
+    }
+
+    return controller;
 }
 
 void servo_controller_dealloc(servo_controller *controller) {
-  if (controller->fd != -1) {
-    free(controller);
-  }
+    if (controller->fd != -1) {
+        free(controller);
+    }
 }
 
 void servo_controller_set_position(servo_controller *controller, uint8_t channel, float value) {
@@ -36,8 +36,8 @@ void servo_controller_set_position(servo_controller *controller, uint8_t channel
     unsigned char command[] = {0x84, channel, target & 0x7F, target >> 7 & 0x7F};
     if (write(controller->fd, command, sizeof(command)) == -1)
     {
-      perror("[servo_controller] error writing");
-      //return -1;
+        perror("[servo_controller] error writing");
+        //return -1;
     }
     //return 0;
 }
