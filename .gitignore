@@ -1,2 +1,4 @@
-/tools/id_rsa*
-/tools/host
+gp9_regs.h
+*.pyc
+build
+host
