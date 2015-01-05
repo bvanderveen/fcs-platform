@@ -12,10 +12,10 @@ Hardware:
 
  - Get CMake to export a statically linkable library
  - Get sending commands to the IMU to work properly
- - Add Rpi tools repository as a submodule rather than cloning it into toolchain Docker image
 
 # DONE
 
+ - Add Rpi tools repository as a submodule rather than cloning it into toolchain Docker image
  - Connect to and read from IMU
  - Create C API for driving servos
  - Create C API for reading IMU
@@ -45,11 +45,11 @@ Make sure you've got Docker on your laptop and your `docker` command is set up t
 
 ## Use a cross-compiler
 
-We're going to build a Docker container with a cross-compiler in it. It will build a Docker container for our compiler toolchain and then compile our source code in the resulting container. 
+We're going to build a Docker container with a compiler toolchain that targets the Rpi. This command builds the docker container and runs the compiler.
 
     $ ./build.sh
 
-Then, deploy and run the resulting binary on the Rpi (make sure your public key is on the Rpi so you don't have to type your password).
+Then, we can deploy and run the resulting binary on the Rpi (make sure your public key is on the Rpi so you don't have to type your password).
 
     ./deploy.sh root@192.168.2.200
 
