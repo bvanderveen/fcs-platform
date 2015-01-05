@@ -1,5 +1,5 @@
 
-set(CMAKE_C_FLAGS "-g -Wall")
+set(CMAKE_C_FLAGS "-g -Wall -Werror")
 add_executable (fcs-platform main.c chr_sensor.c platform.c)
 
 include_directories(${Maestro_SOURCE_DIR})
