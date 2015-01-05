@@ -96,6 +96,6 @@ void talkToGPS() {
         }
     }
 
-    done: 
+    //done: 
         close(fd);
 }
