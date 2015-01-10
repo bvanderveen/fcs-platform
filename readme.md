@@ -11,7 +11,12 @@ Hardware:
 # TODO
 
  - Get CMake to export a statically linkable library
+ - Delete `main.c`
  - Get sending commands to the IMU to work properly
+ - Get IMU health report to be more meaningful (ensure has GPS lock at least)
+ - Write some kind of tests
+ - Bring `platform/src` to root
+ - Move `src/maestro` to `src/platform/servo_controller`
 
 # DONE
 
