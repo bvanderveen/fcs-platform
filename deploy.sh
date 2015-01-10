@@ -8,6 +8,8 @@ if [[ -z "$host" ]]; then
 	exit -1
 fi
 
+./kill.sh
+
 #scp -oStrictHostKeyChecking=no build/chr-um6/tests/um6_hardware_test $host:/home/um6_hardware_test
 #ssh -t $host /home/um6_hardware_test
 

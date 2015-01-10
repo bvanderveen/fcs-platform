@@ -1,7 +1,5 @@
 #!/bin/bash 
 
-./kill.sh
-
 set -e
 
 docker build -t dev platform
