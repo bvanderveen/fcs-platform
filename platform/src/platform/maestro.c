@@ -37,7 +37,7 @@ int servo_controller_set_position(servo_controller *controller, uint8_t channel,
     }
     float scaled = (value * 4000) + 4000;
     int target = (int)roundf(scaled);
-    printf("[servo_controller] Setting ch%d to %f (%d us)\n", channel, value, target/4);
+    //printf("[servo_controller] Setting ch%d to %f (%d us)\n", channel, value, target/4);
 
     unsigned char command[] = {0x84, channel, target & 0x7F, target >> 7 & 0x7F};
     if (write(controller->fd, command, sizeof(command)) == -1)

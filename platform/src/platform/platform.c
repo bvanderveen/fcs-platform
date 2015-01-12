@@ -32,7 +32,7 @@ float platform_get_input_value_float(platform *platform, uint8_t channel) {
 }
 
 void platform_chr_sensor_data_handler(uint8_t channel, uint32_t *data, void *context) {
-    printf("[platform] channel 0x%x (%d) = %d (%f)\n", channel, channel, *data, int32_to_float(*data));
+    //printf("[platform] channel 0x%x (%d) = %d (%f)\n", channel, channel, *data, int32_to_float(*data));
     platform *p = (platform *)context;
     p->input_values[channel] = *data;
 }
