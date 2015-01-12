@@ -1,6 +1,6 @@
 
 set(CMAKE_C_FLAGS "-g -Wall -Werror")
-add_executable (fcs-platform main.c chr_sensor.c platform.c maestro.c)
+add_executable (fcs-platform main.c chr_sensor.c platform.c servo_controller.c)
 
 include_directories(${Maestro_SOURCE_DIR})
 include_directories(${Gps_SOURCE_DIR})

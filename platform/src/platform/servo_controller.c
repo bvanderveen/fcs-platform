@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdint.h>
-#include "maestro.h"
+#include "servo_controller.h"
 
 servo_controller *servo_controller_alloc(const char *device) {
     servo_controller *controller = calloc(1, sizeof(servo_controller));
