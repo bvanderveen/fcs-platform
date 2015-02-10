@@ -68,7 +68,7 @@ For some reason the program doesn’t always die on the Pi when you expect it to
 
     $ ssh root@192.168.2.200 killall fcs-platform
 
-# Notes about connecting to the Pi
+# Notes about connecting to the Pi on OS X
 
 I wanted to be able to work on the Pi without having to plug it into a router, rather, I wanted to plug it into my Macbook Air directly via ethernet and the Thunderbolt ethernet adapter. OS X Internet Sharing was being a contrarian as I attempted to do this. After much wailing and gnashing of teeth I arrived at this process:
 
