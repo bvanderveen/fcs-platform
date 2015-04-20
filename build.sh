@@ -2,5 +2,5 @@
 
 set -e
 
-docker build -t dev platform
-docker run --rm -v $(pwd)/platform/src:/opt/src -v $(pwd)/build:/opt/build -v $(pwd)/rpi-tools:/opt/rpi-tools -t dev
+docker build -t compiler compiler
+docker run --rm -v $(pwd):/opt -v $(pwd)/deps/rpi-tools:/opt/rpi-tools -t compiler

@@ -2,5 +2,5 @@
 	path = deps/chr-um6
 	url = git@github.com:TobiasSimon/chr-um6.git
 [submodule "rpi-tools"]
-	path = rpi-tools
+	path = deps/rpi-tools
 	url = https://github.com/raspberrypi/tools.git

@@ -1,8 +1,8 @@
 #include <stdint.h>
 
-#include "../chr-um6/sys/posix_serial.h"
-#include "../chr-um6/wire_format/um6_parser.h"
-#include "../chr-um6/wire_format/um6_composer.h"
+#include "sys/posix_serial.h"
+#include "wire_format/um6_parser.h"
+#include "wire_format/um6_composer.h"
 
 #ifndef __CHR_SENSOR_H__
 #define __CHR_SENSOR_H__
