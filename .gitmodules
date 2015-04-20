@@ -1,5 +1,5 @@
 [submodule "platform/src/chr-um6"]
-	path = platform/src/chr-um6
+	path = deps/chr-um6
 	url = git@github.com:TobiasSimon/chr-um6.git
 [submodule "rpi-tools"]
 	path = rpi-tools
