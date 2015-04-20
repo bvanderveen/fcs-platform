@@ -15,8 +15,6 @@ Hardware:
  - Get sending commands to the IMU to work properly
  - Get IMU health report to be more meaningful (ensure has GPS lock at least)
  - Write some kind of tests
- - Bring `platform/src` to root
- - Move `src/maestro` to `src/platform/servo_controller`
 
 # DONE
 
@@ -29,6 +27,8 @@ Hardware:
  - Set up cross compiler
  - Cross-compile, deploy binary, and run on Rpi in one command
  - Get Rpi to wiggle a servo using Maestro example C code
+ - Bring `platform/src` to root
+ - Move `src/maestro` to `src/platform/servo_controller`
  
 # MISTAKES
 
